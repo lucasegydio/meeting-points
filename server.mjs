@@ -22,6 +22,7 @@ const json=(res,status,data)=>{res.writeHead(status,{'Content-Type':'application
 const fail=(status,message)=>Object.assign(new Error(message),{status});
 const slug=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'').slice(0,70);
 const shortSentence=s=>{const clean=String(s||'').replace(/\s+/g,' ').trim(),sentence=clean.match(/^.*?[.!?](?:\s|$)/)?.[0]||clean;if(sentence.length<=170)return sentence;return sentence.slice(0,167).replace(/\s+\S*$/,'')+'…'};
+const sameSite=(req,url)=>{try{const origin=new URL(req.headers.origin||url.origin);return origin.host===url.host||origin.host===req.headers.host}catch{return false}};
 const externalJson=async url=>{const r=await fetch(url,{signal:AbortSignal.timeout(16000),headers:{'User-Agent':'meeting.points/1.0 (personal music catalogue)'}});if(!r.ok)throw Error('Fonte externa indisponível');return r.json()};
 async function releaseMetadata(title,artist){
  const term=`${artist} ${title}`,appleSearch=await externalJson('https://itunes.apple.com/search?'+new URLSearchParams({term,entity:'album',limit:'12'})).catch(()=>({results:[]}));
@@ -52,7 +53,7 @@ try{
   const id=url.searchParams.get('id'),published=await readPublished(),next=published.filter(x=>x.id!==id);if(next.length===published.length)throw fail(404,'Review não encontrada.');await writeFile(publishedFile,JSON.stringify(next,null,2));return json(res,200,{ok:true});
  }
  if(url.pathname==='/api/admin/reviews'&&(req.method==='POST'||req.method==='PATCH')){
-  if(req.headers.origin!==url.origin)throw fail(403,'Publique pela central administrativa.');
+  if(!sameSite(req,url))throw fail(403,'Publique pela central administrativa.');
   let chunks=[],size=0;for await(const chunk of req){size+=chunk.length;if(size>250000)throw fail(413,'Review muito longa.');chunks.push(chunk)}
   let d;try{d=JSON.parse(Buffer.concat(chunks).toString())}catch{throw fail(400,'Dados inválidos.')}
   if(req.method==='PATCH'){
@@ -75,7 +76,7 @@ try{
   const album=url.searchParams.get('album');if(!albumIds.has(album))throw fail(404,'Álbum não encontrado.');
   if(req.method==='GET'){const offset=Number(url.searchParams.get('offset')||0);if(!Number.isSafeInteger(offset)||offset<0)throw fail(400,'Página inválida.');return json(res,200,page(album,offset));}
   if(req.method!=='POST')throw fail(405,'Método não permitido.');
-  if(req.headers.origin!==url.origin)throw fail(403,'Envie o comentário pela página do álbum.');
+  if(!sameSite(req,url))throw fail(403,'Envie o comentário pela página do álbum.');
   if(!req.headers['content-type']?.startsWith('application/json'))throw fail(415,'Formato inválido.');
   if(Number(req.headers['content-length'])>16000)throw fail(413,'Comentário muito longo.');
   let chunks=[],size=0;for await(const chunk of req){size+=chunk.length;if(size>16000)throw fail(413,'Comentário muito longo.');chunks.push(chunk);}
