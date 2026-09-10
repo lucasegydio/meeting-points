@@ -1,6 +1,52 @@
 // Public sourced facts; null means not verified. Do not invent birthdays.
 export const artistDirectory=[
   {
+    "artist": "Underscores",
+    "name": "Underscores",
+    "aliases": [
+      "underscores",
+      "April Harper Grey"
+    ],
+    "realName": "April Harper Grey",
+    "birthDate": "2000-04-21",
+    "group": false,
+    "role": "Produtora, cantora e compositora",
+    "bio": "Projeto de April Harper Grey, artista de San Francisco que atravessa hyperpop, dubstep, future bass e pop eletrônico com construção narrativa de internet.",
+    "curiosity": "Em U, a artista parte de músicas de shopping, aeroportos, hotéis e supermercados para transformar pop funcional em club music hiperproduzida.",
+    "source": {
+      "label": "Apple Music — perfil de underscores",
+      "url": "https://music.apple.com/us/artist/underscores/1204838812"
+    },
+    "factsSources": [
+      {
+        "label": "Apple Music — perfil de underscores",
+        "url": "https://music.apple.com/us/artist/underscores/1204838812"
+      },
+      {
+        "label": "MusicBrainz — créditos de U",
+        "url": "https://musicbrainz.org/release/fa198feb-af0b-4d07-a65f-3f53fb8bff46"
+      }
+    ],
+    "releaseLabel": {
+      "name": "Mom+Pop / Corporate Rockmusic",
+      "release": "U",
+      "source": {
+        "label": "Apple Music — U",
+        "url": "https://music.apple.com/us/album/u/1878382378"
+      },
+      "verification": "Álbum completo confirmado por Apple Music, Deezer e MusicBrainz."
+    },
+    "currentLabel": {
+      "name": "Mom+Pop",
+      "source": {
+        "label": "MusicBrainz — selo do lançamento",
+        "url": "https://musicbrainz.org/release/fa198feb-af0b-4d07-a65f-3f53fb8bff46"
+      },
+      "note": "Selo do lançamento U; não afirmar exclusividade contratual."
+    },
+    "photoCoverage": "streaming-profile"
+  },
+  {
     "artist": "Anatole Muster",
     "name": "Anatole Muster",
     "realName": "Anatole Muster",

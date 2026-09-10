@@ -322,21 +322,30 @@
     "catalogDescription": "Álbum de Kim Petras, lançado em 2019. 18 faixas.",
     "artistProfile": {
       "name": "Kim Petras",
-      "role": "Artista · Pop",
-      "bio": "Kim Petras is a German singer and songwriter based in Los Angeles. After receiving international media attention for transitioning as a teenager, she released her debut EP, One Piece of Tape (2011), and wrote tracks for Fergie, JoJo, Skylar Simone, and Twice. In 2017, Petras released her debut single \"I Don't Want It at All\", which charted at No. 54 on Billboard's Dance Club Songs chart. She followed this with her second EP, Turn Off the Light, Vol. 1 (2018), the mixtapes Clarity and Turn Off the Light, and the single \"How It's Done\" (2019); the last of these featured on the soundtrack of Charlie's Angels. A further track with Kygo, \"Broken Glass\" (2020), charted at No. 13 on Billboard's Dance/Electronic Songs chart.",
+      "role": "Cantora e compositora · pop",
+      "bio": "Cantora e compositora alemã radicada em Los Angeles, Kim Petras construiu uma discografia que atravessa pop eletrônico, synth-pop, dance e teatralidade club. No arquivo, Detour aparece como uma curva mais atmosférica dentro dessa trajetória.",
       "facts": [
         [
-          "Lançamento no arquivo",
-          "Detour"
+          "Origem",
+          "Colônia, Alemanha"
+        ],
+        [
+          "Base",
+          "Los Angeles"
+        ],
+        [
+          "Neste arquivo",
+          "Detour · 2019"
         ],
         [
           "Selo",
-          "℗ 2021 Amigo Records, LLC, under exclusive license to Republic Records, a division of UMG Recordings, Inc."
+          "Amigo Records / Republic Records"
         ]
       ],
+      "curiosity": "Antes de seus ciclos de grande gravadora, Kim Petras lançou uma sequência de singles independentes que ajudou a consolidar sua identidade pop hiperestilizada.",
       "source": {
-        "label": "Wikipedia · perfil do artista",
-        "url": "https://music.apple.com/us/artist/kim-petras/291697579?uo=4"
+        "label": "Apple Music · perfil de Kim Petras",
+        "url": "https://music.apple.com/us/artist/kim-petras/291697579"
       }
     },
     "artistPhoto": {
@@ -838,10 +847,10 @@
     "id": "underscores-u",
     "title": "U",
     "artist": "Underscores",
-    "release": "2026-02-25T08:00:00Z",
+    "release": "2026-03-20T07:00:00Z",
     "releaseVerified": true,
     "type": "Álbum",
-    "genre": "Pop",
+    "genre": "Pop eletrônico / hyperpop",
     "score": 9,
     "placement": "none",
     "shortReview": "Com U, a artista e produtora norte-americana underscores (April Harper Grey) orquestra uma guinada brilhante em sua carreira. ",
@@ -851,8 +860,8 @@
       "O triunfo de U está na habilidade de underscores de brincar com as expectativas do ouvinte, injetando nostalgia e futurismo em doses iguais. Tematicamente reduzido a um drama mais direto sobre amor, sexo e fama, o álbum flerta abertamente com o R&B e a música de pista da virada do milênio, ecoando o perfeccionismo de produtores como Timbaland e The Neptunes, mas passado pelo filtro hiperativo da era digital. Em faixas como \"Tell Me (U Want It)\", ela sobrepõe sintetizadores cintilantes, efeitos vocais carregados de autotune e quedas bruscas de brostep com uma disciplina invejável que impede a música de soar cansativa. Parte da diversão do disco é justamente ser pego de surpresa: músicas como \"Innuendo\" e \"Lovefield\" começam de um jeito para, logo em seguida, serem arremessadas no hiperespaço do trance, proporcionando uma euforia constante.",
       "Mesmo quando tira o pé do acelerador em momentos mais intimistas, como as harmonizações da despojada balada \"The Peace\", a artista demonstra uma versatilidade pop incontestável. O experimentalismo de seus primeiros anos não desapareceu, apenas foi focado de maneira mais letal. Ao fugir da superprodução, ela foca na força dos ganchos e na coreografia mental de cada faixa. Por trás de sua estética intencionalmente plástica, U esconde minúcias que recompensam a audição atenta — até mesmo seu título minimalista de apenas uma letra. É uma consolidação de talento absoluto que prova o domínio de April Harper Grey como uma das produtoras mais visionárias e criativas da atualidade."
     ],
-    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/8c/a4/b1/8ca4b15b-9ea9-b43a-0c1e-0748f0f3bb80/810090098739_Cover.jpg/3000x3000bb.jpg",
-    "coverOriginal": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/8c/a4/b1/8ca4b15b-9ea9-b43a-0c1e-0748f0f3bb80/810090098739_Cover.jpg/3000x3000bb.jpg",
+    "cover": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/34/e9/68/34e9680c-152b-9fc6-07e7-8f253e76d8f2/810090098852_Cover.jpg/3000x3000bb.jpg",
+    "coverOriginal": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/34/e9/68/34e9680c-152b-9fc6-07e7-8f253e76d8f2/810090098852_Cover.jpg/3000x3000bb.jpg",
     "coverVariants": [],
     "coverWidth": 3000,
     "coverHeight": 3000,
@@ -1025,36 +1034,57 @@
     "sources": [
       {
         "name": "Apple / iTunes",
-        "url": "https://music.apple.com/us/album/tell-me-u-want-it-single/1879508534?uo=4"
+        "url": "https://music.apple.com/us/album/u/1878382378?uo=4"
       },
       {
         "name": "Deezer",
         "url": "https://www.deezer.com/album/938302501"
+      },
+      {
+        "name": "MusicBrainz",
+        "url": "https://musicbrainz.org/release/fa198feb-af0b-4d07-a65f-3f53fb8bff46"
       }
     ],
     "source": "Apple / iTunes",
     "coverSource": "Apple / iTunes",
     "label": "℗ 2026 Mom+Pop under exclusive license from Corporate Rockmusic, Inc.",
-    "url": "https://music.apple.com/us/album/tell-me-u-want-it-single/1879508534?uo=4",
+    "url": "https://music.apple.com/us/album/u/1878382378?uo=4",
     "listenLabel": "Ouvir no Apple Music",
-    "catalogDescription": "Álbum de Underscores, lançado em 2026. 9 faixas.",
+    "catalogDescription": "Terceiro álbum de Underscores, lançado em 20 de março de 2026 pela Mom+Pop sob licença da Corporate Rockmusic. 9 faixas, 34 min.",
     "artistProfile": {
       "name": "Underscores",
-      "role": "Artista · Pop",
-      "bio": "An underscore or underline is a line drawn under a segment of text. In proofreading, underscoring is a convention that says \"set this text in italic type\", traditionally used on manuscript or typescript as an instruction to the printer. Its use to add emphasis in modern finished documents is generally avoided.",
+      "role": "Produtora, cantora e compositora · pop eletrônico",
+      "bio": "Projeto de April Harper Grey, artista de San Francisco que atravessa hyperpop, dubstep, future bass e pop eletrônico com construção narrativa de internet.",
       "facts": [
         [
-          "Lançamento no arquivo",
-          "U"
+          "Nome civil",
+          "April Harper Grey"
+        ],
+        [
+          "Nascimento",
+          "21/04/2000"
+        ],
+        [
+          "Origem",
+          "San Francisco, CA"
+        ],
+        [
+          "Neste arquivo",
+          "U · 2026"
         ],
         [
           "Selo",
-          "℗ 2026 Mom+Pop under exclusive license from Corporate Rockmusic, Inc."
+          "Mom+Pop / Corporate Rockmusic"
         ]
       ],
+      "curiosity": "Em U, a artista parte de músicas de shopping, aeroportos, hotéis e supermercados para transformar pop funcional em club music hiperproduzida.",
       "source": {
-        "label": "Wikipedia · perfil do artista",
-        "url": "https://music.apple.com/us/artist/underscores/1204838812?uo=4"
+        "label": "Apple Music · perfil de underscores",
+        "url": "https://music.apple.com/us/artist/underscores/1204838812"
+      },
+      "extraSource": {
+        "label": "MusicBrainz · créditos de U",
+        "url": "https://musicbrainz.org/release/fa198feb-af0b-4d07-a65f-3f53fb8bff46"
       }
     },
     "artistPhoto": {
@@ -1064,7 +1094,8 @@
       "width": 1000,
       "height": 1000,
       "caption": "Underscores · foto de perfil",
-      "credit": "Deezer"
+      "credit": "Deezer",
+      "source": "https://www.deezer.com/artist/11926479"
     }
   }
 ]
