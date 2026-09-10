@@ -19,3 +19,4 @@ body.review-special{--ink:#f5f3ff;--muted:#b0b3c8;--line:#36394d;--blue:#a3acff;
 .perfect-seal small{font-size:.75rem}.byline-author small{font-size:.75rem}
 .detail-art .artwork-deck .artwork-back-card img.artwork-back{background:#e4e7f1!important}.review-special .detail-art .artwork-deck .artwork-back-card img.artwork-back{background:#171c2e!important}
 @media(max-width:600px){.mood-choice strong{font-size:.875rem;letter-spacing:-.025em;overflow-wrap:normal}.mood-choice{padding:.7rem}.review-special .track-body p{color:var(--muted)}}
+.score-history{display:block;max-width:9rem;font-size:.68rem;line-height:1.35;color:var(--muted);text-align:right}.review-special .score-history{color:#b6b8ce}@media(max-width:600px){.score-history{max-width:7rem;font-size:.62rem}}

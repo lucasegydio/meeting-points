@@ -43,13 +43,29 @@ try{
  if(process.env.PORT&&req.headers.host)allowedHosts.push(req.headers.host);
  if(!allowedHosts.includes(req.headers.host))throw fail(403,'Endereço não permitido.');
  const url=new URL(req.url,`http://${req.headers.host}`);
+ if(url.pathname==='/api/admin/reviews'&&req.method==='GET'){
+  const published=await readPublished(),byId=new Map(published.map(x=>[x.id,x]));
+  const all=[...published,...baseCatalog.filter(x=>!byId.has(x.id))];
+  return json(res,200,all.map(a=>({id:a.id,title:a.title,artist:a.artist,score:a.score,cover:a.cover,backCover:a.backCover||'',placement:a.placement||'none'})));
+ }
  if(url.pathname==='/api/admin/reviews'&&req.method==='DELETE'){
   const id=url.searchParams.get('id'),published=await readPublished(),next=published.filter(x=>x.id!==id);if(next.length===published.length)throw fail(404,'Review não encontrada.');await writeFile(publishedFile,JSON.stringify(next,null,2));return json(res,200,{ok:true});
  }
- if(url.pathname==='/api/admin/reviews'&&req.method==='POST'){
+ if(url.pathname==='/api/admin/reviews'&&(req.method==='POST'||req.method==='PATCH')){
   if(req.headers.origin!==url.origin)throw fail(403,'Publique pela central administrativa.');
-  let chunks=[],size=0;for await(const chunk of req){size+=chunk.length;if(size>100000)throw fail(413,'Review muito longa.');chunks.push(chunk)}
+  let chunks=[],size=0;for await(const chunk of req){size+=chunk.length;if(size>250000)throw fail(413,'Review muito longa.');chunks.push(chunk)}
   let d;try{d=JSON.parse(Buffer.concat(chunks).toString())}catch{throw fail(400,'Dados inválidos.')}
+  if(req.method==='PATCH'){
+   const id=String(d.id||'').trim(),published=await readPublished(),existing=published.find(x=>x.id===id)||baseCatalog.find(x=>x.id===id);if(!existing)throw fail(404,'Review não encontrada.');
+   const next=structuredClone(existing),score=Math.max(0,Math.min(10,Math.round(Number(d.score??next.score)||0)));
+   for(const key of ['title','artist','genre','type','label','url','listenLabel','catalogDescription'])if(d[key]!=null)next[key]=String(d[key]).trim()||next[key];
+   for(const key of ['cover','coverOriginal','backCover','backCoverOriginal'])if(d[key]!=null)next[key]=String(d[key]).trim();
+   if(d.artistPhotoSrc){next.artistPhoto={artist:next.artist,src:String(d.artistPhotoSrc).trim(),original:String(d.artistPhotoOriginal||d.artistPhotoSrc).trim(),width:Number(d.artistPhotoWidth)||1000,height:Number(d.artistPhotoHeight)||1000,caption:`${next.artist} · foto de perfil`,credit:String(d.artistPhotoCredit||'Cadastro manual'),source:String(d.artistPhotoSource||'#')};}
+   if(d.review){const parts=String(d.review).split(/\n\s*\n/).filter(Boolean);next.review=parts.length?parts:next.review;next.shortReview=shortSentence(parts[0]||next.review?.[0]);}
+   if(score!==next.score){next.scoreHistory={original:next.score,updated:score,updatedAt:new Date().toISOString()};next.score=score;}
+   const placement=score>=9&&['frequency','radar'].includes(d.placement)?d.placement:'none';next.placement=placement;if(placement==='frequency')published.forEach(x=>{if(x.placement==='frequency'&&x.id!==id)x.placement='none'});
+   const index=published.findIndex(x=>x.id===id);if(index>=0)published[index]=next;else published.unshift(next);await writeFile(publishedFile,JSON.stringify(published,null,2));albumIds.add(id);return json(res,200,{ok:true,id});
+  }
   const title=String(d.title||'').trim(),artist=String(d.artist||'').trim(),year=String(d.year||new Date().getFullYear()).replace(/\D/g,'').slice(0,4),slug=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   if(!title||!artist||year.length!==4||!String(d.review||'').trim()||!String(d.body||'').trim()||!Number.isInteger(Number(d.score)))throw fail(400,'Preencha álbum, artista, nota e os textos da review.');
   const metadata=await releaseMetadata(title,artist),id=`${slug(artist)}-${slug(title)}`,release=metadata.release||`${year}-01-01T00:00:00Z`,score=Math.max(0,Math.min(10,Math.round(Number(d.score)||0))),placement=score>=9&&['frequency','radar'].includes(d.placement)?d.placement:'none',record={id,title,artist,release,releaseVerified:Boolean(metadata.release),type:metadata.type||'Álbum',genre:metadata.genre||'Curadoria',score,placement,shortReview:shortSentence(d.review),review:[String(d.review||'Nova escuta'),...String(d.body||'').split(/\n\s*\n/).filter(Boolean)],cover:metadata.cover||baseCatalog[0].cover,coverOriginal:metadata.cover||baseCatalog[0].coverOriginal||baseCatalog[0].cover,coverVariants:[],coverWidth:3000,coverHeight:3000,color:'#283cff',tracks:metadata.tracks||[],credits:[],sources:metadata.sources||[],source:metadata.coverSource||'Cadastro manual',coverSource:metadata.coverSource||'Cadastro manual',label:metadata.label||'',url:metadata.url||'#',listenLabel:metadata.listenLabel||'Dados em edição',catalogDescription:`${metadata.type||'Álbum'} de ${artist}, lançado em ${new Date(release).getUTCFullYear()}. ${metadata.tracks?.length?`${metadata.tracks.length} faixas.`:''}`,artistProfile:metadata.artistProfile,artistPhoto:metadata.artistPhoto};
@@ -71,7 +87,7 @@ try{
   db.prepare('INSERT INTO comments(id,album,nick,body,score,created) VALUES(?,?,?,?,?,?)').run(input.id,album,nick,body,input.score,new Date().toISOString());return json(res,201,page(album));
  }
  if(url.pathname.startsWith('/api/'))throw fail(404,'Serviço não encontrado.');
- if(url.pathname==='/catalog.json'){const published=await readPublished(),rank=x=>x.placement==='frequency'?0:x.placement==='radar'?1:2;published.sort((a,b)=>rank(a)-rank(b));return json(res,200,[...published,...baseCatalog]);}
+ if(url.pathname==='/catalog.json'){const published=await readPublished(),rank=x=>x.placement==='frequency'?0:x.placement==='radar'?1:2,byId=new Set(published.map(x=>x.id));published.sort((a,b)=>rank(a)-rank(b));return json(res,200,[...published,...baseCatalog.filter(x=>!byId.has(x.id))]);}
  if(!['GET','HEAD'].includes(req.method))throw fail(405,'Método não permitido.');
  const candidate=path.resolve(root,'.'+decodeURIComponent(url.pathname));if(candidate!==root&&!candidate.startsWith(root+path.sep))throw fail(403,'Não permitido.');
  const file=await realpath(candidate===root?path.join(root,'index.html'):candidate);if(!file.startsWith(root+path.sep))throw fail(403,'Não permitido.');
