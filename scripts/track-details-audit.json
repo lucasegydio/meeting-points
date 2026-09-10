@@ -1,0 +1,113 @@
+[
+  {
+    "id": "burial-untrue",
+    "tracks": 13,
+    "bpm": 7,
+    "production": 13,
+    "errors": [
+      "MusicBrainz: The operation was aborted due to timeout"
+    ]
+  },
+  {
+    "id": "cyst-00",
+    "tracks": 9,
+    "bpm": 0,
+    "production": 0,
+    "errors": []
+  },
+  {
+    "id": "nate-sib-reborn",
+    "tracks": 10,
+    "bpm": 0,
+    "production": 0,
+    "errors": []
+  },
+  {
+    "id": "dorian-electra",
+    "tracks": 10,
+    "bpm": 0,
+    "production": 0,
+    "errors": []
+  },
+  {
+    "id": "zeds-dead-return",
+    "tracks": 14,
+    "bpm": 0,
+    "production": 0,
+    "errors": [
+      "MusicBrainz: The operation was aborted due to timeout"
+    ]
+  },
+  {
+    "id": "sam-gellaitry-anywhere",
+    "tracks": 17,
+    "bpm": 0,
+    "production": 0,
+    "errors": []
+  },
+  {
+    "id": "rico-nasty-rx",
+    "tracks": 9,
+    "bpm": 0,
+    "production": 0,
+    "errors": []
+  },
+  {
+    "id": "charli-music-fashion-film",
+    "tracks": 11,
+    "bpm": 0,
+    "production": 10,
+    "errors": []
+  },
+  {
+    "id": "danny-doss-crystallise",
+    "tracks": 6,
+    "bpm": 0,
+    "production": 0,
+    "errors": [
+      "Deezer: Album identity mismatch",
+      "MusicBrainz: The operation was aborted due to timeout"
+    ]
+  },
+  {
+    "id": "slayr-avant-nova",
+    "tracks": 6,
+    "bpm": 0,
+    "production": 6,
+    "errors": []
+  },
+  {
+    "id": "frost-children-tweaker",
+    "tracks": 6,
+    "bpm": 0,
+    "production": 0,
+    "errors": [
+      "MusicBrainz: The operation was aborted due to timeout"
+    ]
+  },
+  {
+    "id": "tiffany-day-halo",
+    "tracks": 13,
+    "bpm": 0,
+    "production": 0,
+    "errors": [
+      "MusicBrainz: The operation was aborted due to timeout"
+    ]
+  },
+  {
+    "id": "tennyson-plx",
+    "tracks": 6,
+    "bpm": 0,
+    "production": 0,
+    "errors": [
+      "Deezer: Album identity mismatch"
+    ]
+  },
+  {
+    "id": "deekapz-remixes",
+    "tracks": 14,
+    "bpm": 0,
+    "production": 0,
+    "errors": []
+  }
+]

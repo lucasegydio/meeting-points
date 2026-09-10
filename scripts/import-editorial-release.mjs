@@ -1,0 +1,29 @@
+import {readFile,writeFile,mkdir} from 'node:fs/promises';
+import {createRequire} from 'node:module';
+import {parseHTML} from '../../.motion-analysis/test-runtime/node_modules/linkedom/esm/index.js';
+import {api} from './catalog-network.mjs';
+const require=createRequire(import.meta.url),sharp=require(require.resolve('sharp',{paths:['C:/Users/Lucas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules']}));
+const source='https://visioncraftmusic.blogspot.com/2025/05/anatole-muster-hopecore-2025.html';
+await mkdir('scripts/research',{recursive:true});await mkdir('dist/assets/tv',{recursive:true});
+const html=await(await fetch(source)).text(),{document}=parseHTML(html),body=document.querySelector('.post-body');if(!body)throw Error('Original review not found');
+const clean=body.cloneNode(true);clean.querySelectorAll('script,style,iframe').forEach(n=>n.remove());
+const paragraphs=parseHTML('<html><body>'+clean.innerHTML.replace(/<br\s*\/?>/gi,'\n').replace(/<\/(p|div)>/gi,'\n\n')+'</body></html>').document.body.textContent.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+if(!paragraphs.join(' ').includes('Como um abraço gostoso, nota 10.'))throw Error('Review integrity check failed');
+await writeFile('scripts/research/hopecore-original.json',JSON.stringify({source,title:document.querySelector('.post-title')?.textContent.trim(),paragraphs,originalText:clean.textContent},null,2));
+const {results}=await api('https://itunes.apple.com/lookup?id=1808177005&entity=song');const album=results.find(x=>x.wrapperType==='collection');if(album.artistName!=='Anatole Muster'||album.collectionName.toLowerCase()!=='hopecore')throw Error('Wrong release');
+const art=album.artworkUrl100.replace('100x100bb','3000x3000bb'),image=Buffer.from(await(await fetch(art)).arrayBuffer()),meta=await sharp(image).metadata();const id='anatole-muster-hopecore',base='assets/hq/'+id;
+await writeFile('dist/'+base+'-original.jpg',image);const variants=[];for(const width of [...new Set([480,960,Math.min(meta.width,1800)].filter(w=>w<=meta.width))]){const path=base+'-'+width+'.webp';await sharp(image).resize({width,withoutEnlargement:true}).webp({quality:94}).toFile('dist/'+path);variants.push({width,src:path});}
+const creditsSource={name:'Anatole Muster · créditos oficiais',url:'https://www.youtube.com/watch?v=Oi48_miRuEM'};
+const a={id,title:album.collectionName,artist:album.artistName,release:album.releaseDate,releaseVerified:true,listened:2025,type:'Álbum',genre:'Jazz fusion / Pop experimental',score:10,color:'#b8c8ae',label:'Anatole Muster Records',source:'Apple / iTunes',sources:[{name:'Apple / iTunes',url:album.collectionViewUrl},creditsSource],url:album.collectionViewUrl,listenLabel:'Ouvir no Apple Music',cover:variants.at(-1).src,coverOriginal:base+'-original.jpg',coverVariants:variants,coverWidth:meta.width,coverHeight:meta.height,coverSource:'Apple / iTunes',coverSourceUrl:art,review:['Como um abraço gostoso.',paragraphs[0],paragraphs[1]],reviewOriginal:{author:'Lucas',source,publicationYear:2025,paragraphs},reviewStatus:'published',catalogDescription:'Álbum de Anatole Muster, lançado em 16 de maio de 2025 pela Anatole Muster Records. A edição reúne 13 faixas.',credits:[{name:'Anatole Muster',role:'Mixagem',source:creditsSource},{name:'Marc Von Sinner',role:'Mixagem',source:creditsSource},{name:'Stephanie “slozzaa” Loza',role:'Masterização',source:creditsSource},{name:'Julia Wiesiollek',role:'Arte',source:creditsSource},{name:'Valentin Neher',role:'Fotografia',source:creditsSource}],tracks:results.filter(x=>x.wrapperType==='track').map(t=>({number:t.trackNumber,name:t.trackName,duration:t.trackTimeMillis,url:t.trackViewUrl,contributors:[{name:t.artistName,role:'Artista'}]}))};
+const trackCredits={4:[['daniel hayn','Bateria']],5:[['Nicolas Viccaro','Bateria']],6:[['Gabriel Taylor','Trompete']],8:[['Thomas Harres','Bateria']],11:[['Nick Bergere (Scro)','Colaboração na composição']],12:[['Laurence Wilkins','Mixagem de bateria']]};
+for(const t of a.tracks)t.credits=(trackCredits[t.number]||[]).map(([name,role])=>({name,role,source:creditsSource}));
+const catalog=JSON.parse(await readFile('dist/catalog.json','utf8'));const previous=catalog.find(x=>x.id===id);if(previous?.audioReview)a.audioReview=previous.audioReview;await writeFile('dist/catalog.json',JSON.stringify([a,...catalog.filter(x=>x.id!==id)],null,2)+'\n');
+console.log('Hopecore:',paragraphs.length,'paragraphs;',a.tracks.length,'tracks;',meta.width+'px cover');
+const tv=[];
+for(const video of ['ET-hf8B-tI4','OC5mO8I_Cd4','THjekE5p2aw','QmR4zLcORNc']){
+ const r=await fetch('https://www.youtube.com/watch?v='+video),page=await r.text();const match=page.match(/var ytInitialPlayerResponse = (\{.*?\});/);if(!match)throw Error('Video metadata unavailable '+video);const parsed=JSON.parse(match[1]),v=parsed.videoDetails,m=parsed.microformat?.playerMicroformatRenderer;
+ const thumbnails=v.thumbnail.thumbnails;const remote=thumbnails.at(-1).url;const buffer=Buffer.from(await(await fetch(remote)).arrayBuffer());const dimensions=await sharp(buffer).metadata();const poster='assets/tv/'+video+'.webp';await sharp(buffer).webp({quality:93}).toFile('dist/'+poster);
+ const chapters=v.shortDescription.split('\n').map(line=>{const match=line.match(/^(\d{1,2}:\d{2}(?::\d{2})?)\s*(?:::)?\s+(.+)$/);if(!match)return null;const time=match[1].split(':').reduce((s,n)=>s*60+Number(n),0);return {time,title:match[2]};}).filter(Boolean);
+ tv.push({video,title:v.title,channel:v.author,length:Number(v.lengthSeconds),description:v.shortDescription,published:m?.publishDate,poster,posterWidth:dimensions.width,posterHeight:dimensions.height,chapters,source:'https://www.youtube.com/watch?v='+video});console.log(v.title,Number(v.lengthSeconds),chapters.length+' chapters',dimensions.width+'px');
+}
+await writeFile('scripts/research/tv-primary.json',JSON.stringify(tv,null,2)+'\n');

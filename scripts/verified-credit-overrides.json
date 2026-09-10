@@ -1,0 +1,14 @@
+{
+  "tennyson-plx": {
+    "source": {"name":"Tennyson / Bandcamp","url":"https://tennyson.bandcamp.com/album/plx"},
+    "tracks": {"CHARM":[{"name":"E. Fox-Peck","role":"Composição interpolada — Brockley"}]}
+  },
+  "deekapz-remixes": {
+    "source": {"name":"Deekapz / Spotify","url":"https://open.spotify.com/album/7puIZzknO6IZie8NOSO5dH"},
+    "remixersByTrackNumber": {
+      "2":["Flying Buff"],"3":["Jacquelone","ANTCONSTANTINO"],"4":["Maffalda","Crosstalk"],
+      "5":["DJ LUKINHAS","DJ CARLOZS"],"6":["Carola"],"7":["Chediak","KENYA20Hz"],"8":["kLap"],
+      "9":["ELK+"],"10":["King Kami"],"11":["Brunoso"],"12":["th4ys"],"13":["MKJAY"],"14":["Enderhax"]
+    }
+  }
+}

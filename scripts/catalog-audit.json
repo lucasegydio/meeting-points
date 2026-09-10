@@ -1,0 +1,197 @@
+[
+  {
+    "id": "nate-sib-reborn",
+    "title": "Reborn",
+    "dimensions": [
+      3000,
+      3000
+    ],
+    "coverSource": "Apple / iTunes",
+    "providers": [
+      "Apple / iTunes",
+      "Deezer",
+      "MusicBrainz"
+    ],
+    "errors": []
+  },
+  {
+    "id": "dorian-electra",
+    "title": "Dorian Electra",
+    "dimensions": [
+      1400,
+      1400
+    ],
+    "coverSource": "Apple / iTunes",
+    "providers": [
+      "Apple / iTunes",
+      "Deezer",
+      "MusicBrainz"
+    ],
+    "errors": []
+  },
+  {
+    "id": "sam-gellaitry-anywhere",
+    "title": "ANYWHERE HERE IS PERFECT (DELUXE)",
+    "dimensions": [
+      2075,
+      2075
+    ],
+    "coverSource": "Apple / iTunes",
+    "providers": [
+      "Apple / iTunes",
+      "Deezer"
+    ],
+    "errors": []
+  },
+  {
+    "id": "charli-music-fashion-film",
+    "title": "Music, Fashion, Film",
+    "dimensions": [
+      3000,
+      3000
+    ],
+    "coverSource": "Cover Art Archive",
+    "providers": [
+      "Deezer",
+      "MusicBrainz"
+    ],
+    "errors": []
+  },
+  {
+    "id": "danny-doss-crystallise",
+    "title": "Crystallise Divergence - EP",
+    "dimensions": [
+      3000,
+      3000
+    ],
+    "coverSource": "Apple / iTunes",
+    "providers": [
+      "Apple / iTunes",
+      "Deezer",
+      "MusicBrainz"
+    ],
+    "errors": []
+  },
+  {
+    "id": "tennyson-plx",
+    "title": "plx - EP",
+    "dimensions": [
+      3000,
+      3000
+    ],
+    "coverSource": "Apple / iTunes",
+    "providers": [
+      "Apple / iTunes",
+      "Deezer"
+    ],
+    "errors": [
+      "MusicBrainz: HTTP 503"
+    ]
+  },
+  {
+    "id": "deekapz-remixes",
+    "title": "Deekapz FM Remixes",
+    "dimensions": [
+      3000,
+      3000
+    ],
+    "coverSource": "Apple / iTunes",
+    "providers": [
+      "Apple / iTunes",
+      "Deezer"
+    ],
+    "errors": []
+  },
+  {
+    "id": "cyst-00",
+    "title": "ᲘᲘ",
+    "dimensions": [
+      3000,
+      3000
+    ],
+    "coverSource": "Apple / iTunes",
+    "providers": [
+      "Apple / iTunes",
+      "Deezer"
+    ],
+    "errors": [
+      "MusicBrainz: HTTP 503"
+    ]
+  },
+  {
+    "id": "zeds-dead-return",
+    "title": "Return to the Return (of the Spectrum of Intergalactic Happiness)",
+    "dimensions": [
+      1000,
+      1000
+    ],
+    "coverSource": "Deezer",
+    "providers": [
+      "Deezer",
+      "MusicBrainz"
+    ],
+    "errors": [
+      "Capa: The operation was aborted due to timeout"
+    ]
+  },
+  {
+    "id": "rico-nasty-rx",
+    "title": "RX",
+    "dimensions": [
+      1000,
+      1000
+    ],
+    "coverSource": "Deezer",
+    "providers": [
+      "Deezer",
+      "MusicBrainz"
+    ],
+    "errors": [
+      "Capa: The operation was aborted due to timeout"
+    ]
+  },
+  {
+    "id": "slayr-avant-nova",
+    "title": "AVANT NOVA",
+    "dimensions": [
+      1000,
+      1000
+    ],
+    "coverSource": "Deezer",
+    "providers": [
+      "Deezer",
+      "MusicBrainz"
+    ],
+    "errors": []
+  },
+  {
+    "id": "frost-children-tweaker",
+    "title": "Tweaker Poem",
+    "dimensions": [
+      1000,
+      1000
+    ],
+    "coverSource": "Deezer",
+    "providers": [
+      "Deezer",
+      "MusicBrainz"
+    ],
+    "errors": [
+      "Capa: The operation was aborted due to timeout"
+    ]
+  },
+  {
+    "id": "tiffany-day-halo",
+    "title": "HALO",
+    "dimensions": [
+      1400,
+      1400
+    ],
+    "coverSource": "Cover Art Archive",
+    "providers": [
+      "Deezer",
+      "MusicBrainz"
+    ],
+    "errors": []
+  }
+]
