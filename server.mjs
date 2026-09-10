@@ -17,6 +17,7 @@ const readPublished=async()=>{try{return JSON.parse(await readFile(publishedFile
 const albumIds=new Set([...baseCatalog,...await readPublished()].map(a=>a.id));
 const mime={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.jpg':'image/jpeg','.jfif':'image/jpeg','.webp':'image/webp','.png':'image/png','.svg':'image/svg+xml','.mp3':'audio/mpeg','.m4a':'audio/mp4','.ogg':'audio/ogg','.wav':'audio/wav','.txt':'text/plain; charset=utf-8'};
 const port=Number(process.env.PORT||4173);
+const host=process.env.PORT?'0.0.0.0':'127.0.0.1';
 const json=(res,status,data)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(data));};
 const fail=(status,message)=>Object.assign(new Error(message),{status});
 const slug=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'').slice(0,70);
@@ -38,7 +39,9 @@ async function releaseMetadata(title,artist){
 const page=(album,offset=0)=>({comments:db.prepare('SELECT id,nick,body,score,created FROM comments WHERE album=? ORDER BY created DESC,id DESC LIMIT 50 OFFSET ?').all(album,offset),total:db.prepare('SELECT count(*) AS n FROM comments WHERE album=?').get(album).n});
 export const server=http.createServer(async(req,res)=>{
 try{
- if(![`127.0.0.1:${port}`,`localhost:${port}`].includes(req.headers.host))throw fail(403,'Endereço não permitido.');
+ const allowedHosts=[`127.0.0.1:${port}`,`localhost:${port}`];
+ if(process.env.PORT&&req.headers.host)allowedHosts.push(req.headers.host);
+ if(!allowedHosts.includes(req.headers.host))throw fail(403,'Endereço não permitido.');
  const url=new URL(req.url,`http://${req.headers.host}`);
  if(url.pathname==='/api/admin/reviews'&&req.method==='DELETE'){
   const id=url.searchParams.get('id'),published=await readPublished(),next=published.filter(x=>x.id!==id);if(next.length===published.length)throw fail(404,'Review não encontrada.');await writeFile(publishedFile,JSON.stringify(next,null,2));return json(res,200,{ok:true});
@@ -84,4 +87,4 @@ try{
  res.writeHead(200,{...headers,'Content-Length':body.length});res.end(req.method==='HEAD'?undefined:body);
 }catch(e){json(res,e.status||(e.code==='ENOENT'?404:500),{error:e.status?e.message:e.code==='ENOENT'?'Não encontrado.':'Não foi possível salvar ou carregar. Tente novamente.'});}
 });
-server.listen(port,'127.0.0.1',()=>console.log(`Local: http://127.0.0.1:${port}`));
+server.listen(port,host,()=>console.log(`Local: http://${host}:${port}`));
