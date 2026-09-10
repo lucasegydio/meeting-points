@@ -24,13 +24,17 @@ const slug=s=>String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerC
 const shortSentence=s=>{const clean=String(s||'').replace(/\s+/g,' ').trim(),sentence=clean.match(/^.*?[.!?](?:\s|$)/)?.[0]||clean;if(sentence.length<=170)return sentence;return sentence.slice(0,167).replace(/\s+\S*$/,'')+'…'};
 const sameSite=(req,url)=>{try{const origin=new URL(req.headers.origin||url.origin);return origin.host===url.host||origin.host===req.headers.host}catch{return false}};
 const externalJson=async url=>{const r=await fetch(url,{signal:AbortSignal.timeout(16000),headers:{'User-Agent':'meeting.points/1.0 (personal music catalogue)'}});if(!r.ok)throw Error('Fonte externa indisponível');return r.json()};
-async function releaseMetadata(title,artist){
+const idFromUrl=(value,kind)=>{const s=String(value||'');if(!s)return null;if(/^\d+$/.test(s))return s;const m=kind==='apple'?s.match(/\/(?:album|playlist)\/[^/]+\/(\d+)|[?&]i=(\d+)/):s.match(/deezer\.com\/(?:[a-z]{2}\/)?album\/(\d+)|album-(\d+)/);return m?.[1]||m?.[2]||null};
+async function releaseMetadata(title,artist,override={}){
  const term=`${artist} ${title}`,appleSearch=await externalJson('https://itunes.apple.com/search?'+new URLSearchParams({term,entity:'album',limit:'12'})).catch(()=>({results:[]}));
  const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
- const apple=appleSearch.results?.find(x=>norm(x.collectionName)===norm(title)&&norm(x.artistName).includes(norm(artist)))||appleSearch.results?.[0];
- let appleTracks=[];if(apple?.collectionId)appleTracks=(await externalJson(`https://itunes.apple.com/lookup?id=${apple.collectionId}&entity=song`).catch(()=>({results:[]}))).results?.filter(x=>x.wrapperType==='track')||[];
+ const appleId=idFromUrl(override.apple||override.url,'apple');
+ const appleLookup=appleId?await externalJson(`https://itunes.apple.com/lookup?id=${appleId}&entity=song`).catch(()=>({results:[]})):null;
+ const apple=appleLookup?.results?.find(x=>x.wrapperType==='collection')||appleSearch.results?.find(x=>norm(x.collectionName)===norm(title)&&norm(x.artistName).includes(norm(artist)))||appleSearch.results?.[0];
+ let appleTracks=[];if(appleLookup)appleTracks=appleLookup.results?.filter(x=>x.wrapperType==='track')||[];else if(apple?.collectionId)appleTracks=(await externalJson(`https://itunes.apple.com/lookup?id=${apple.collectionId}&entity=song`).catch(()=>({results:[]}))).results?.filter(x=>x.wrapperType==='track')||[];
  const dzSearch=await externalJson('https://api.deezer.com/search/album?'+new URLSearchParams({q:term,limit:'12'})).catch(()=>({data:[]})),dzHit=dzSearch.data?.find(x=>norm(x.title)===norm(title)&&norm(x.artist?.name).includes(norm(artist)))||dzSearch.data?.[0];
- const dz=dzHit?.id?await externalJson(`https://api.deezer.com/album/${dzHit.id}`).catch(()=>null):null;
+ const dzId=idFromUrl(override.deezer||override.url,'deezer');
+ const dz=dzId?await externalJson(`https://api.deezer.com/album/${dzId}`).catch(()=>null):(dzHit?.id?await externalJson(`https://api.deezer.com/album/${dzHit.id}`).catch(()=>null):null);
  const appleList=appleTracks.map(x=>({number:x.trackNumber,name:x.trackName,duration:x.trackTimeMillis,url:x.trackViewUrl,credits:[]}));
  const deezerList=await Promise.all((dz?.tracks?.data||[]).map(async(x,i)=>{const detail=await externalJson(`https://api.deezer.com/track/${x.id}`).catch(()=>x);return {number:i+1,name:x.title,duration:x.duration*1000,url:x.link,bpm:Number(detail.bpm)||0,bpmSource:Number(detail.bpm)>0?{name:'Deezer',url:x.link}:null,credits:(detail.contributors||[]).map(c=>({name:c.name,role:c.role||'Participação',source:{name:'Deezer',url:x.link}}))}}));
  const tracks=deezerList.length>appleList.length?deezerList:appleList.map((x,i)=>({...x,bpm:deezerList[i]?.bpm||0,bpmSource:deezerList[i]?.bpmSource||null,credits:deezerList[i]?.credits||[]}));
@@ -44,6 +48,18 @@ try{
  if(process.env.PORT&&req.headers.host)allowedHosts.push(req.headers.host);
  if(!allowedHosts.includes(req.headers.host))throw fail(403,'Endereço não permitido.');
  const url=new URL(req.url,`http://${req.headers.host}`);
+ if(url.pathname==='/api/admin/reviews/refresh'&&req.method==='POST'){
+  if(!sameSite(req,url))throw fail(403,'Atualize pela central administrativa.');
+  let chunks=[],size=0;for await(const chunk of req){size+=chunk.length;if(size>32000)throw fail(413,'Dados muito longos.');chunks.push(chunk)}
+  let d;try{d=JSON.parse(Buffer.concat(chunks).toString())}catch{throw fail(400,'Dados inválidos.')}
+  const id=String(d.id||'').trim(),published=await readPublished(),existing=published.find(x=>x.id===id)||baseCatalog.find(x=>x.id===id);if(!existing)throw fail(404,'Review não encontrada.');
+  const title=String(d.title||existing.title||'').trim(),artist=String(d.artist||existing.artist||'').trim();if(!title||!artist)throw fail(400,'Informe álbum e artista.');
+  const metadata=await releaseMetadata(title,artist,{apple:d.appleId||d.appleUrl,deezer:d.deezerId||d.deezerUrl,url:d.url});
+  const next=structuredClone(existing);
+  Object.assign(next,{title,artist,release:metadata.release||next.release,releaseVerified:Boolean(metadata.release)||next.releaseVerified,type:metadata.type||next.type,genre:metadata.genre||next.genre,label:metadata.label||next.label,cover:metadata.cover||next.cover,coverOriginal:metadata.cover||next.coverOriginal,coverWidth:metadata.cover?3000:next.coverWidth,coverHeight:metadata.cover?3000:next.coverHeight,url:metadata.url||next.url,listenLabel:metadata.listenLabel||next.listenLabel,tracks:metadata.tracks?.length?metadata.tracks:next.tracks,sources:metadata.sources?.length?metadata.sources:next.sources,source:metadata.coverSource||next.source,coverSource:metadata.coverSource||next.coverSource,catalogDescription:`${metadata.type||next.type||'Álbum'} de ${artist}, lançado em ${new Date(metadata.release||next.release||Date.now()).getUTCFullYear()}. ${metadata.tracks?.length?`${metadata.tracks.length} faixas.`:''}`});
+  if(metadata.artistProfile)next.artistProfile=metadata.artistProfile;if(metadata.artistPhoto)next.artistPhoto=metadata.artistPhoto;
+  const index=published.findIndex(x=>x.id===id);if(index>=0)published[index]=next;else published.unshift(next);await writeFile(publishedFile,JSON.stringify(published,null,2));albumIds.add(id);return json(res,200,{ok:true,id,cover:next.cover,release:next.release,tracks:next.tracks?.length||0});
+ }
  if(url.pathname==='/api/admin/reviews'&&req.method==='GET'){
   const published=await readPublished(),byId=new Map(published.map(x=>[x.id,x]));
   const all=[...published,...baseCatalog.filter(x=>!byId.has(x.id))];
